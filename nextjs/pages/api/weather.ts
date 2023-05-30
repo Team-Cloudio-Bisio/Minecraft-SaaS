@@ -3,7 +3,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const getWeather = async () => {
-        const response = await fetch("http://localhost:5164/WeatherForecast", {
+        const response = await fetch("http://localhost:5115/WeatherForecast", {
             method: "GET",
         });
 
