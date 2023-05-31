@@ -1,6 +1,7 @@
 # Starter pipeline
 # https://aka.ms/yaml
-trigger: none
+trigger: 
+  - main
 pool:
   vmImage: 'windows-latest'
 steps:
