@@ -9,7 +9,7 @@ public class DBUserContext {
     
     public DBUserContext () {}
 
-    private async Task<List<User>> LoadUsers() {
+    public async Task<List<User>> GetUsers() {
         List<User> users = new List<User>();
         DBConnectionContext context = new DBConnectionContext();
         
@@ -72,10 +72,6 @@ public class DBUserContext {
 
         context.CloseConnection();
         return rowsAffected;
-    }
-
-    public async Task<List<User>> GetUsers() {
-        return await LoadUsers();
     }
 
     public async Task<bool> LoginUser(User user) {

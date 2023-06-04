@@ -1,5 +1,4 @@
 
-
 using System.Data.SqlClient;
 
 namespace DBMicroservice.Data { }
@@ -7,7 +6,7 @@ namespace DBMicroservice.Data { }
 public class DBConnectionContext {
 
     private readonly string connectionString = "connString";
-    
+
     private SqlConnection connection;
 
     public DBConnectionContext() {
