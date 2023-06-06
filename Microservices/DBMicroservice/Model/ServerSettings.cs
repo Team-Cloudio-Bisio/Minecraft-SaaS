@@ -39,5 +39,4 @@ namespace DBMicroservice.Model {
         }
     }
 
-    
 }

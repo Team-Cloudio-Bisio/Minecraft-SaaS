@@ -3,71 +3,73 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using DBMicroservice.Configuration;
+using DBMicroservice.Data;
 using DBMicroservice.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace DBMicroservice.Controllers { }
-
-[ApiController]
-[Route("[controller]")]
-public class UserController : ControllerBase {
-
-    [HttpGet("get", Name = "GetUser")]
-    public async Task<IEnumerable<User>> Get() {
-        DBUserContext context = new DBUserContext();
+namespace DBMicroservice.Controllers {
         
-        List<User> res = await context.GetUsers();
-
-        return Enumerable.Range(0, res.Count).Select(i => res[i]);
-    }
-    
-    [HttpPost("insert", Name = "InsertUser")]
-    public async Task<IActionResult> Insert(User user) {
-        DBUserContext context = new DBUserContext();
+    [ApiController]
+    [Route("[controller]")]
+    public class UserController : ControllerBase {
         
-        int res = await context.InsertUser(user);
+        private readonly IConfiguration _configuration;
+        private DBUserContext _context;
 
-        if (res == 1)
-            return StatusCode(200, "Insert succesful!");
-        else
-            return StatusCode(401, "Insert unsuccesful");
-    }
-    
-    [HttpPost("login", Name = "LoginUser")]
-    public async Task<IActionResult> Login(User user) {
-        DBUserContext context = new DBUserContext();
+        public UserController(IConfiguration configuration) {
+            _configuration = configuration;
+
+            _context = new DBUserContext(_configuration.GetDBConnectionString());
+        }
+
+        [HttpGet("get", Name = "GetUser")]
+        public async Task<IEnumerable<User>> Get() {
+            List<User> res = await _context.GetUsers();
+
+            return Enumerable.Range(0, res.Count).Select(i => res[i]);
+        }
         
-        bool res = await context.LoginUser(user);
+        [HttpPost("insert", Name = "InsertUser")]
+        public async Task<IActionResult> Insert(User user) {
+            int res = await _context.InsertUser(user);
 
-        if (res == true)
-            return StatusCode(200, "Login succesful!");
-        else
-            return StatusCode(401, "Login unsuccesful");
-    }
-    
-    [HttpDelete("delete", Name = "DeleteUser")]
-    public async Task<IActionResult> Delete(string username) {
-        DBUserContext context = new DBUserContext();
+            if (res == 1)
+                return StatusCode(200, "Insert succesful!");
+            else
+                return StatusCode(401, "Insert unsuccesful");
+        }
         
-        int res = await context.DeleteUser(username);
+        [HttpPost("login", Name = "LoginUser")]
+        public async Task<IActionResult> Login(User user) {
+            bool res = await _context.LoginUser(user);
 
-        if (res == 1)
-            return StatusCode(200, "Delete succesful!");
-        else
-            return StatusCode(401, "Delete unsuccesful");
-    }
-    
-    [HttpPatch("patch", Name = "PatchUser")]
-    public async Task<IActionResult> Patch(User user) {
-        DBUserContext context = new DBUserContext();
+            if (res == true)
+                return StatusCode(200, "Login succesful!");
+            else
+                return StatusCode(401, "Login unsuccesful");
+        }
         
-        int res = await context.PatchUser(user);
+        [HttpDelete("delete", Name = "DeleteUser")]
+        public async Task<IActionResult> Delete(string username) {
+            int res = await _context.DeleteUser(username);
 
-        if (res == 1)
-            return StatusCode(200, "Patch succesful!");
-        else
-            return StatusCode(401, "Patch unsuccesful");
+            if (res == 1)
+                return StatusCode(200, "Delete succesful!");
+            else
+                return StatusCode(401, "Delete unsuccesful");
+        }
+        
+        [HttpPatch("patch", Name = "PatchUser")]
+        public async Task<IActionResult> Patch(User user) {
+            int res = await _context.PatchUser(user);
+
+            if (res == 1)
+                return StatusCode(200, "Patch succesful!");
+            else
+                return StatusCode(401, "Patch unsuccesful");
+        }
+
     }
-
 }
