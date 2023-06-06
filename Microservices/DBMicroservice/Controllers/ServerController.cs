@@ -8,7 +8,6 @@ using DBMicroservice.Configuration;
 using DBMicroservice.Data;
 using DBMicroservice.Model;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace DBMicroservice.Controllers {
 
@@ -16,10 +15,10 @@ namespace DBMicroservice.Controllers {
     [Route("[controller]")]
     public class ServerController : ControllerBase {
 
-        private readonly IConfiguration _configuration;
+        private readonly DBMicroservice.Configuration.IConfiguration _configuration;
         private DBServerContext _context;
 
-        public ServerController(IConfiguration configuration) {
+        public ServerController(DBMicroservice.Configuration.IConfiguration configuration) {
             _configuration = configuration;
 
             _context = new DBServerContext(_configuration.GetDBConnectionString());

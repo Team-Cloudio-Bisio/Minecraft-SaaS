@@ -17,11 +17,22 @@ namespace DBMicroservice.Configuration {
             const string secretName = "DBConnectionString";
             var keyVaultName = "MinecraftSaaS";
             var kvUri = $"https://{keyVaultName}.vault.azure.net";
-            
-            var client = new SecretClient(new Uri(kvUri), new DefaultAzureCredential());
+            string connectionString;
 
-            var secret = await client.GetSecretAsync(secretName);
-            DBConnString = secret.Value.Value;
+            if (IsRunningOnAzure()) {
+                var client = new SecretClient(new Uri(kvUri), new DefaultAzureCredential());
+                var secret = await client.GetSecretAsync(secretName);
+                connectionString = secret.Value.Value;
+            }
+            else {
+                connectionString = "connectionString";
+            }
+
+            DBConnString = connectionString;
+        }
+        
+        private bool IsRunningOnAzure() {
+            return Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT").Equals("Release");
         }
         
         public string GetDBConnectionString() {
