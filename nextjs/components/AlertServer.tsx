@@ -21,7 +21,7 @@ type Properties = {
 const test= { id: 1, name: 'Vanilla', status: true, version: '1.20', curp: 0, maxp: 5, gamemode: 0,
               difficulty: 2, whitelist: false, cracked: false, fly: false, entities: true, resourcepack: ""}
 
-export default function PopupButton() {
+export default function EditButton() {
 
     var p : Properties
     const [propsPopup, setPropsPopup] = useState(false); 

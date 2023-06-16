@@ -4,7 +4,7 @@ import '@/components/Server'
 import { Culo } from '@/components/Server';
 import { ServerProperties } from '@/components/Server'
 
-export default function PopupButton(culo: Culo) {
+export default function EditButton(culo: Culo) {
 
     const [popup, setPopup] = useState(false);
     function onClickSave() {
