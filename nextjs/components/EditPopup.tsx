@@ -1,19 +1,25 @@
 import '@/app/globals.css'
 import React, { useState } from 'react';
-import '@/components/Server'
-import { Culo } from '@/components/Server';
+import { ServerUpdater } from '@/components/Server';
+import AlertPopup from '@/components/AlertServer';
 import { ServerProperties } from '@/components/Server'
 
-export default function EditButton(culo: Culo) {
+export type ClosePopup = {  
+  serverUp: ServerUpdater
+  newProps: ServerProperties
+  closePopupBack: (state: boolean) => void //callback per chiudere il popup
+}
 
+export default function EditPopup(serverUpdater: ServerUpdater) {
+
+    const [properties, setProperties] = useState(serverUpdater.serverInstance)
     const [popup, setPopup] = useState(false);
-    function onClickSave() {
-            setPopup(false)
-            culo.updateCallback(properties)
+
+    function onClickSave() { //pulsante "SAVE" del popup inferiore
+          setPopup(false)
+          serverUpdater.updateCallback(properties)
     }
     
-    var curResourcePack: string
-    const [properties, setProperties] = useState(culo.serverInstance)
     function onChangeName(value: string) {
         setProperties(p => ({
             ...p,
@@ -112,7 +118,7 @@ export default function EditButton(culo: Culo) {
                             Name:
                             <input className="ml-2 border w-24"
                                    name='name'
-                                   placeholder={culo.serverInstance.name}
+                                   placeholder={serverUpdater.serverInstance.name}
                                    onChange={(event) => onChangeName(event.target.value)}
                             />
                         </div>
@@ -120,13 +126,13 @@ export default function EditButton(culo: Culo) {
                             Server IP:
                             <input className="ml-2 border w-36"
                                    name='ip'
-                                   placeholder={culo.serverInstance.ip}
+                                   placeholder={serverUpdater.serverInstance.ip}
                                    onChange={(event) => onChangeIP(event.target.value)}
                             />.mcsaas.com
                         </div>
                         <div className="mb-2">{/* IMPORTANTE: CREARE LOGICA COERENTE */}
                             <label className="mr-2">Status:</label>
-                            {culo.serverInstance.status ?
+                            {serverUpdater.serverInstance.status ?
                                     <span style={{ color: 'green' }}>
                                         {'Online'}
                                     </span> 
@@ -140,12 +146,12 @@ export default function EditButton(culo: Culo) {
                             <select className="ml-2 border"
                                     name="version"
                                     id="version"
-                                    defaultValue="3"
+                                    defaultValue={serverUpdater.serverInstance.version}
                                     onChange={(event) => onChangeVersion(event.target.value)}>
-                                <option value="0">1.18</option>
-                                <option value="1">1.19</option>
-                                <option value="2">1.19.4</option>
-                                <option value="3">1.20</option>
+                                <option value="1.18">1.18</option>
+                                <option value="1.19">1.19</option>
+                                <option value="1.19.4">1.19.4</option>
+                                <option value="1.20">1.20</option>
                             </select>
                         </div>
                         <div className="mb-2">
@@ -153,7 +159,7 @@ export default function EditButton(culo: Culo) {
                             <select className="ml-2 border"
                                     name="gamemode"
                                     id="gamemode"
-                                    defaultValue={culo.serverInstance.gamemode}
+                                    defaultValue={serverUpdater.serverInstance.gamemode}
                                     onChange={(event) => onChangeGameMode(event.target.value)}>
                                 <option value="0">Survival</option>
                                 <option value="1">Creative</option>
@@ -166,7 +172,7 @@ export default function EditButton(culo: Culo) {
                             <select className="ml-2 border"
                                     name="difficulty"
                                     id="difficulty"
-                                    defaultValue={culo.serverInstance.difficulty}
+                                    defaultValue={serverUpdater.serverInstance.difficulty}
                                     onChange={(event) => onChangeDifficulty(event.target.value)}>
                                 <option value="0">Peaceful</option>
                                 <option value="1">Easy</option>
@@ -178,21 +184,21 @@ export default function EditButton(culo: Culo) {
                             White-list:
                             <input className="ml-2"
                                    type="checkbox"                                   
-                                   defaultChecked={culo.serverInstance.whitelist}
+                                   defaultChecked={serverUpdater.serverInstance.whitelist}
                                    onChange={(event) => onChangeWhiteList(event.target.checked)}/>
                         </div>
                         <div className="mb-2">
                             Cracked clients:
                             <input className="ml-2"
                                    type="checkbox"
-                                   defaultChecked={culo.serverInstance.cracked}
+                                   defaultChecked={serverUpdater.serverInstance.cracked}
                                     onChange={(event) => onChangeCracked(event.target.checked)}/>
                         </div>
                         <div className="mb-2">
                             Fly:
                             <input className="ml-2"
                                    type="checkbox"
-                                   defaultChecked={culo.serverInstance.fly}
+                                   defaultChecked={serverUpdater.serverInstance.fly}
                                    onChange={(event) => onChangeFly(event.target.checked)}/>
                         </div>
                         <div className="mb-2">
@@ -202,6 +208,17 @@ export default function EditButton(culo: Culo) {
                                    placeholder='None'
                                    onChange={(event) => onChangeResourcePack(event.target.value)}
                             />
+                        </div>
+                        <div className="mb-3">
+                            <label
+                                htmlFor="formFile"
+                                className="inline-block"
+                                >World
+                            </label>
+                            <input
+                                className="relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
+                                type="file"
+                                id="formFile" />
                         </div>
                     </p>
                   </div>
@@ -214,13 +231,14 @@ export default function EditButton(culo: Culo) {
                     >
                       Close
                     </button>
-                    <button
+                    <AlertPopup serverUp={serverUpdater} newProps={properties} closePopupBack={setPopup}></AlertPopup>
+                    {/*<button
                       className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                       type="button"
                       onClick={onClickSave}
                     >
                       Save Changes
-                    </button>
+                            </button>*/}
                   </div>
                 </div>
               </div>
