@@ -1,11 +1,12 @@
 "use client";
 
-import { Component, useContext } from "react";
+import { Component, HtmlHTMLAttributes, useContext } from "react";
 import { useEffect, useState } from "react"
 import Link from "next/link";
 import '@/app/globals.css'
-import { useRouter } from "next/router";
 import { UserContext } from "@/common/context/UserProvider";
+import { useRouter } from "next/navigation";
+import { User } from "@/common/types";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -13,36 +14,29 @@ export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const onLoginButton = () => {
-    if(email !== '' && password !== '') {
-      console.log("login api")
+  const onLoginButton = async (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
 
-      loginCall();
+    if(email !== '' && password !== '') {
+      const post = async () => {
+        const user: User = {username: email, userPassword: password};
+        const res = await fetch("/api/login", { method: "POST", body: JSON.stringify(user)});
+        return res.json();
+      }
+
+      post().then((data) => {
+        if(data.message === "Login successfully") {
+          dispatch({ type: "SET", user: { username: email, userPassword: password}})
+          router.push('/serverlist');
+        } else {
+          alert("Login error...");
+        }
+      });
     } else {
       alert("Please insert email and password");
     }
   }
 
-  const loginCall = () => {
-    const post = async () => {
-      const response = await fetch('/api/login', {
-        method: "POST",
-        body: JSON.stringify({ username: email, password: password}),
-      })
-
-      return response.json();
-    }
-
-    post().then((data) => {
-      const value = JSON.stringify(data);
-
-      if(value === "200") {
-        dispatch({ type: "SET", user: { username: email, password: password}})
-        router.push('/serverlist')
-      }
-    })
-  }
-    
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden"
       style={{
@@ -88,7 +82,7 @@ export default function LoginForm() {
             Forgot Password?
           </Link>
           <div className="mt-2">
-            <button onClick={onLoginButton} className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
+            <button type='submit' onClick={onLoginButton} className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
               Sign In
             </button>
           </div>

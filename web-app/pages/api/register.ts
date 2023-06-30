@@ -10,7 +10,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     const user: User = JSON.parse(req.body);
 
     const postLogin = async () => {
-        const response = await fetch("http://localhost:5069/Account/login", {
+        const response = await fetch("http://localhost:5069/Account/signin", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -24,9 +24,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     postLogin().then((response) => {
         console.log(response);
         if(response.message === "OK") {
-            res.status(200).json({ message: "Login successfully"});
+            res.status(200).json({ message: "Sign in successfully"});
         } else {
-            res.status(401).json({ message: "Login error"});
+            res.status(401).json({ message: "Sign in error"});
         }
     })
 }

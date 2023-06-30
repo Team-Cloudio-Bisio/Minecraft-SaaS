@@ -10,7 +10,7 @@ type ActionType = {
 
 const initialState: User = {
 	username: '',
-	password: ''
+	userPassword: ''
 };
 
 const reducer = (state: User, action: ActionType) => {
@@ -19,7 +19,7 @@ const reducer = (state: User, action: ActionType) => {
 			return {
 				...state,
 				username: action.user.username,
-				password: action.user.password
+				password: action.user.userPassword
 			};
 		default:
 			return state;

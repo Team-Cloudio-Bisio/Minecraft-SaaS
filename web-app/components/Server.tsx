@@ -1,23 +1,7 @@
 import { useEffect, useState } from 'react';
 import '@/app/globals.css'
 import EditPopup from '@/components/EditPopup'
-
-
-export type ServerProperties = {
-    id: number
-    name: string
-    ip: string
-    status: boolean //false-Offline  true-Online
-    version: string
-    curp: number
-    maxp: number
-    gamemode: number //0-survival  1-Creative  2-Adventure  3-Spectator
-    difficulty: number //0-Peaceful  1-Easy  2-Normal  3-Hard
-    whitelist: boolean
-    cracked: boolean
-    fly: boolean
-    resourcepack: string
-}
+import { ServerProperties } from '@/common/types';
 
 const initState: Array<ServerProperties>= [
     { id: 1, name: 'Vanilla', ip: 'Vanilla', status: false, version: '1.20', curp: 0, maxp: 5, gamemode: 0,
@@ -188,8 +172,7 @@ export default function Server() {
                             servers.map(server => {
                                 if (server.id === activeServer) {
                                     return ( //mettere una grid
-                                    <div className="flex px-3 py-2 bg-white rounded-md shadow-md">
-
+                                    <div key={server.id} className="flex px-3 py-2 bg-white rounded-md shadow-md">
                                         <div>
                                             <img className="h-52 w-auto mr-10 border-solid border-2 border-gray-400" 
                                                  src="/assets/test.jpg">

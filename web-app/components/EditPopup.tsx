@@ -2,7 +2,7 @@ import '@/app/globals.css'
 import React, { useState } from 'react';
 import { ServerUpdater } from '@/components/Server';
 import AlertPopup from '@/components/AlertServer';
-import { ServerProperties } from '@/components/Server'
+import { ServerProperties } from '@/common/types';
 
 export type ClosePopup = {  
   serverUp: ServerUpdater
