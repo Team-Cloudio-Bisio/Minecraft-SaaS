@@ -1,7 +1,12 @@
 import { User } from "@/common/types";
+import { getAccountApiUrl } from "@/common/utils";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
+    if(req.query.api !== process.env.NEXT_PUBLIC_API_KEY) {
+        res.status(400).json({ message: "You are not authorized"});
+    }
+
     if(req.method !== 'POST') {
         res.status(405);
         return;
@@ -10,7 +15,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     const user: User = JSON.parse(req.body);
 
     const postLogin = async () => {
-        const response = await fetch("http://localhost:5069/Account/signin", {
+        const url = getAccountApiUrl();
+        const response = await fetch(`${url}/Account/signin`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -22,7 +28,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     }
 
     postLogin().then((response) => {
-        console.log(response);
         if(response.message === "OK") {
             res.status(200).json({ message: "Sign in successfully"});
         } else {

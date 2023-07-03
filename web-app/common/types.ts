@@ -10,7 +10,7 @@ export type Server = {
 	containerID: string;
 	settings: ServerSettings;
 	admin: Array<User>;
-	whitelist: Array<User>;
+	whitelist: Array<string>;
 }
 
 export type ServerSettings = {
@@ -48,4 +48,9 @@ export type ServerProperties = {
     cracked: boolean
     fly: boolean
     resourcepack: string
+}
+
+export type ServerCommand = {
+	serverName: string
+	command: string
 }

@@ -1,14 +1,13 @@
 import Link from "next/link";
-import { Component, useContext } from "react";
 import { useEffect, useState } from "react"
 import '@/app/globals.css'
-import { useRouter } from "next/router";
-import { UserContext } from "@/common/context/UserProvider";
+import { useRouter } from "next/navigation";
+import { useUserContext } from "@/context/UserProvider";
 import { User } from "@/common/types";
 
 export default function RegisterForm() {
   const router = useRouter();
-  const { state, dispatch } = useContext(UserContext);
+  const { user, setUser } = useUserContext();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('')
@@ -21,13 +20,13 @@ export default function RegisterForm() {
       if(password === repass) {
         const post = async () => {
           const user: User = {username: email, userPassword: password};
-          const res = await fetch("/api/register", { method: "POST", body: JSON.stringify(user)});
+          const res = await fetch(`/api/register?api=${process.env.NEXT_PUBLIC_API_KEY}`, { method: "POST", body: JSON.stringify(user)});
           return res.json();
         }
   
         post().then((data) => {
           if(data.message === "Sign in successfully") {
-            dispatch({ type: "SET", user: { username: email, userPassword: password}})
+            setUser({ username: email, userPassword: password });
             router.push('/serverlist');
           } else {
             alert("Sign in error...");

@@ -1,32 +1,30 @@
-"use client";
-
 import { Component, HtmlHTMLAttributes, useContext } from "react";
 import { useEffect, useState } from "react"
 import Link from "next/link";
 import '@/app/globals.css'
-import { UserContext } from "@/common/context/UserProvider";
 import { useRouter } from "next/navigation";
 import { User } from "@/common/types";
+import { useUserContext } from "@/context/UserProvider";
 
 export default function LoginForm() {
   const router = useRouter();
-  const { state, dispatch } = useContext(UserContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { user, setUser } = useUserContext();
 
   const onLoginButton = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if(email !== '' && password !== '') {
       const post = async () => {
-        const user: User = {username: email, userPassword: password};
-        const res = await fetch("/api/login", { method: "POST", body: JSON.stringify(user)});
+        const u: User = {username: email, userPassword: password};
+        const res = await fetch(`/api/login?api=${process.env.NEXT_PUBLIC_API_KEY}`, { method: "POST", body: JSON.stringify(u)});
         return res.json();
       }
 
       post().then((data) => {
         if(data.message === "Login successfully") {
-          dispatch({ type: "SET", user: { username: email, userPassword: password}})
+          setUser({ username: email, userPassword: password})
           router.push('/serverlist');
         } else {
           alert("Login error...");
