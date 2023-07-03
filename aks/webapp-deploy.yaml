@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minecraftsaas
+  labels:
+    app: minecraftsaas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minecraftsaas
+  template:
+    metadata:
+      labels:
+        app: minecraftsaas
+    spec:
+      containers:
+      - name: minecraftsaas-container
+        image: federicoan98/minecraft-saas:latest
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3000
