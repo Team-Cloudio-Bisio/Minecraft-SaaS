@@ -15,6 +15,10 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY web-app/ .
 
+RUN touch .env.production.local
+RUN --mount=type=secret,id=API_KEY \
+	cat /run/secrets/API_KEY > .env.production.local
+
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -36,10 +40,7 @@ COPY --from=builder /app/public ./public
 # Automatically leverage output traces to reduce image size
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-RUN touch .env.production
-RUN --mount=type=secret,id=API_KEY \
-	cat /run/secrets/API_KEY > .env.production
+COPY --from=builder --chown=nextjs:nodejs /app/.env.production.local ./
 
 USER nextjs
 
