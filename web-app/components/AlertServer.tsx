@@ -41,7 +41,7 @@ export default function AlertPopup(closePopup: ClosePopup) {
     function onClickSaveOver() { //PLUSANTE "SAVE" del popup superiore
         setOverPopup(false)
         closePopup.newProps.status = false
-        closePopup.serverUp.updateActiveBack(0)
+        closePopup.serverUp.updateActiveBack(closePopup.serverUp.serverInstance)
         closePopup.closePopupBack(false)
         closePopup.serverUp.updateCallback(closePopup.newProps)
     }
