@@ -16,7 +16,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
     const postLogin = async () => {
         const url = getAccountApiUrl();
-        const response = await fetch(`${url}/Account/signin`, {
+        const response = await fetch('http://accountmicroservice:81/Account/signin', {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

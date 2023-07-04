@@ -22,7 +22,7 @@ function getServers(req: NextApiRequest, res: NextApiResponse) {
 
     const get = async () => {
         const url = getDBApiUrl();
-        const response = await fetch(`${url}/Server/byUser?username=${user.username}`, {
+        const response = await fetch(`http://dbmicroservice:80/Server/byUser?username=${user.username}`, {
             method: "GET",
         });
 

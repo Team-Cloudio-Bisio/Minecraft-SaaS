@@ -12,6 +12,8 @@ export default function LoginForm() {
   const [password, setPassword] = useState('');
   const { user, setUser } = useUserContext();
 
+  console.log(process.env.NODE_ENV);
+
   const onLoginButton = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
