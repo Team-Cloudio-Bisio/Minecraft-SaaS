@@ -37,9 +37,9 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-RUN touch .env.local
+RUN touch .env.production
 RUN --mount=type=secret,id=API_KEY \
-	cat /run/secrets/API_KEY > .env.local
+	cat /run/secrets/API_KEY > .env.production
 
 USER nextjs
 
