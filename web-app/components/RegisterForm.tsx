@@ -31,7 +31,8 @@ export default function RegisterForm() {
           } else {
             alert("Sign in error...");
           }
-        });
+        })
+        .catch(() => alert("Sign in error"));
       } else {
         alert("password no cuicidono");
       }
