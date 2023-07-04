@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: minecraftsaas-container
-        image: federicoan98/minecraft-saas:latest
+        image: federicoand98/minecraft-saas:latest
         imagePullPolicy: Always
         resources:
           limits:
