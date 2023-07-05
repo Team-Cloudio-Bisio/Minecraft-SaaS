@@ -18,14 +18,12 @@ export default function LoginForm() {
     if(email !== '' && password !== '') {
       const post = async () => {
         const u: User = {username: email, userPassword: password};
-        // const res = await fetch(`/api/login?api=${process.env.NEXT_PUBLIC_API_KEY}`, { method: "POST", body: JSON.stringify(u)});
-        const res = await fetch(`http://accountmicroservice:81/Account/login`, { method: "POST", body: JSON.stringify(u)});
+        const res = await fetch(`/api/login?api=${process.env.NEXT_PUBLIC_API_KEY}`, { method: "POST", body: JSON.stringify(u)});
         return res.json();
       }
 
       post().then((data) => {
-        // if(data.message === "Login successfully") {
-        if(data.message === "OK") {
+        if(data.message === "Login successfully") {
           setUser({ username: email, userPassword: password})
           router.push('/serverlist');
         } else {
