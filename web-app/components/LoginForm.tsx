@@ -29,7 +29,7 @@ export default function LoginForm() {
 
       post().then((data) => {
         // if(data.message === "Login successfully") {
-        if(data === "OK") {
+        if(data.message === "OK") {
           setUser({ username: email, userPassword: password})
           router.push('/serverlist');
         } else {
