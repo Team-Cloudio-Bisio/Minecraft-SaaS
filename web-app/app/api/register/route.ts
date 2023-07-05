@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
     const { searchParams } = new URL(request.url);
 
-    if(searchParams.get('api') !== process.env.NEXT_PUBLIC_APi_KEY) {
+    if(searchParams.get('api') !== process.env.NEXT_PUBLIC_API_KEY) {
         return NextResponse.json({message: "You are not authorized"})
     }
 
