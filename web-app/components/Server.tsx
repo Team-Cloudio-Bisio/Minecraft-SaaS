@@ -33,10 +33,11 @@ export default function Server() {
     const [create, setCreate] = useState(false);
 
     useEffect(() => {
-        fetch(`/api/server/byUser?api=${process.env.NEXT_PUBLIC_API_KEY}`, { method: "POST", body: JSON.stringify({username: user.username, userPassword: user.userPassword})})
-            .then(res => res.json())
-            .then(res => setServers(res))
-            .catch(() => console.log("fetch error"))
+        // fetch(`/api/server/byUser?api=${process.env.NEXT_PUBLIC_API_KEY}`, { method: "POST", body: JSON.stringify({username: user.username, userPassword: user.userPassword})})
+        //     .then(res => res.json())
+        //     .then(res => setServers(res))
+        //     .catch(() => console.log("fetch error"))
+
         // fetch(`http://51.138.90.192:80/Server/byUser?username=${user.username}`, { method: "GET" } )
         //     .then(res => res.json())
         //     .then((res: Array<Server>) => {
