@@ -5,10 +5,10 @@ import { Inter } from 'next/font/google'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
-  title: 'MinecraftSaaS',
-  description: 'Minecraft server provider',
-}
+// export const metadata = {
+//   title: 'MinecraftSaaS',
+//   description: 'Minecraft server provider',
+// }
 
 export default function RootLayout({
   children,
