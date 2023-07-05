@@ -36,7 +36,8 @@ export default function LoginForm() {
           alert("Login error...");
         }
       })
-      .catch(() => alert("Login error"));
+      .catch((e) => alert(e));
+
     } else {
       alert("Please insert email and password");
     }
