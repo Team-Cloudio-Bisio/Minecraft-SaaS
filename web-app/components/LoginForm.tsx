@@ -5,6 +5,7 @@ import '@/app/globals.css'
 import { useRouter } from "next/navigation";
 import { User } from "@/common/types";
 import { useUserContext } from "@/context/UserProvider";
+import { headers } from "next/dist/client/components/headers";
 
 export default function LoginForm() {
   const router = useRouter();
@@ -15,31 +16,30 @@ export default function LoginForm() {
   const onLoginButton = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    const res = await fetch("https://mcsaasauth.azurewebsites.net/api/Login?code=vZUgB3B-BHem6ND33WibRYR97LFNcoJL3SV8GJm6y025AzFuQTlSOg==");
-    const result = await res;
+    // const res = await fetch("https://mcsaasauth.azurewebsites.net/api/Login?code=vZUgB3B-BHem6ND33WibRYR97LFNcoJL3SV8GJm6y025AzFuQTlSOg==");
+    // const result = await res;
 
-    alert(result);
+    if(email !== '' && password !== '') {
+      const post = async () => {
+        const u: User = {username: email, userPassword: password};
+        // const res = await fetch(`/api/login?api=${process.env.NEXT_PUBLIC_API_KEY}`, { method: "POST", body: JSON.stringify(u)});
+        const res = await fetch("http://51.138.90.181:81/Account/login", { method: "POST", body: JSON.stringify(u)});
+        return res.json();
+      }
 
-  //   if(email !== '' && password !== '') {
-  //     const post = async () => {
-  //       const u: User = {username: email, userPassword: password};
-  //       const res = await fetch(`/api/login?api=${process.env.NEXT_PUBLIC_API_KEY}`, { method: "POST", body: JSON.stringify(u)});
-  //       // const res = await fetch("http://51.138.90.181:81/Account/login", { method: "POST", body: JSON.stringify(u)});
-  //       return res.json();
-  //     }
-
-  //     post().then((data) => {
-  //       if(data.message === "Login successfully") {
-  //         setUser({ username: email, userPassword: password})
-  //         router.push('/serverlist');
-  //       } else {
-  //         alert("Login error...");
-  //       }
-  //     })
-  //     .catch(() => alert("Login error"));
-  //   } else {
-  //     alert("Please insert email and password");
-  //   }
+      post().then((data) => {
+        // if(data.message === "Login successfully") {
+        if(data.message === "OK") {
+          setUser({ username: email, userPassword: password})
+          router.push('/serverlist');
+        } else {
+          alert("Login error...");
+        }
+      })
+      .catch(() => alert("Login error"));
+    } else {
+      alert("Please insert email and password");
+    }
   }
 
   return (
