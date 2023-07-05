@@ -9,7 +9,8 @@ export async function POST(request: NextRequest) {
     }
 
     const user: User = await request.json();
-    const response = await fetch('http://accountmicroservice:81/Account/login', {
+    // const response = await fetch('http://accountmicroservice:81/Account/login', {
+    const response = await fetch('http://localhost:5069/Account/register', {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',

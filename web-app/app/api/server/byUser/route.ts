@@ -10,7 +10,8 @@ export async function POST(request: NextRequest) {
     }
 
     const user: User = await request.json();
-    const response = await fetch(`http://dbmicroservice:80/Server/byUser?username=${user.username}`, {
+    // const response = await fetch(`http://dbmicroservice:80/Server/byUser?username=${user.username}`, {
+    const response = await fetch(`http://localhost:4000/Server/byUser?username=${user.username}`, {
         method: "GET",
     })
 

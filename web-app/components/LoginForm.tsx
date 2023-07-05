@@ -15,27 +15,32 @@ export default function LoginForm() {
   const onLoginButton = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if(email !== '' && password !== '') {
-      const post = async () => {
-        const u: User = {username: email, userPassword: password};
-        const res = await fetch(`/api/login?api=${process.env.NEXT_PUBLIC_API_KEY}`, { method: "POST", body: JSON.stringify(u)});
-        // const res = await fetch("http://51.138.90.181:81/Account/login", { method: "POST", body: JSON.stringify(u)});
-        return res.json();
-      }
+    const res = await fetch("https://mcsaasauth.azurewebsites.net/api/Login?code=vZUgB3B-BHem6ND33WibRYR97LFNcoJL3SV8GJm6y025AzFuQTlSOg==");
+    const result = await res;
 
-      post().then((data) => {
-        if(data.message === "Login successfully") {
-          setUser({ username: email, userPassword: password})
-          router.push('/serverlist');
-        } else {
-          alert("Login error...");
-        }
-      })
-      .catch(() => alert("Login error"));
-    } else {
-      alert("Please insert email and password");
-    }
-  }
+    alert(result);
+
+  //   if(email !== '' && password !== '') {
+  //     const post = async () => {
+  //       const u: User = {username: email, userPassword: password};
+  //       const res = await fetch(`/api/login?api=${process.env.NEXT_PUBLIC_API_KEY}`, { method: "POST", body: JSON.stringify(u)});
+  //       // const res = await fetch("http://51.138.90.181:81/Account/login", { method: "POST", body: JSON.stringify(u)});
+  //       return res.json();
+  //     }
+
+  //     post().then((data) => {
+  //       if(data.message === "Login successfully") {
+  //         setUser({ username: email, userPassword: password})
+  //         router.push('/serverlist');
+  //       } else {
+  //         alert("Login error...");
+  //       }
+  //     })
+  //     .catch(() => alert("Login error"));
+  //   } else {
+  //     alert("Please insert email and password");
+  //   }
+  // }
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden"
