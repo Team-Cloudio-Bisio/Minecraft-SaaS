@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import '@/app/globals.css'
 import EditPopup from '@/components/EditPopup'
-import { Server, Server, ServerProperties, User } from '@/common/types';
+import { Server, ServerProperties, User } from '@/common/types';
 import { useUserContext } from '@/context/UserProvider';
 import { getServerFromServerProperties, getServerPropertiesFromServer } from '@/common/utils';
 
