@@ -40,7 +40,7 @@ export default function LoginForm() {
   //   } else {
   //     alert("Please insert email and password");
   //   }
-  // }
+  }
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen overflow-hidden"
