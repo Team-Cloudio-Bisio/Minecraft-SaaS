@@ -23,7 +23,7 @@ export default function LoginForm() {
       const post = async () => {
         const u: User = {username: email, userPassword: password};
         // const res = await fetch(`/api/login?api=${process.env.NEXT_PUBLIC_API_KEY}`, { method: "POST", body: JSON.stringify(u)});
-        const res = await fetch("https://51.138.90.181:81/Account/login", { method: "POST", body: JSON.stringify(u)});
+        const res = await fetch("https://mcsaasauth.azurewebsites.net/api/Login?code=vZUgB3B-BHem6ND33WibRYR97LFNcoJL3SV8GJm6y025AzFuQTlSOg==", {method: "POST", body: JSON.stringify(u)});
         return res.json();
       }
 
