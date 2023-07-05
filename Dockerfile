@@ -15,9 +15,11 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY web-app/ .
 
-RUN touch .env.production.local
-RUN --mount=type=secret,id=API_KEY \
-	cat /run/secrets/API_KEY > .env.production.local
+RUN --mount=type=secret,id=LOGIN_KEY \
+	cat /run/secrets/LOGIN_KEY > .env.production.local
+RUN echo -e "\n" >> .env.production.local
+RUN --mount=type=secret,id=REGISTER_KEY \
+	cat /run/secrets/REGISTER_KEY >> .env.production.local
 
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
