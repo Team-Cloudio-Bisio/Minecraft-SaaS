@@ -1,3 +1,4 @@
+"use client"
 import { UserProvider } from '@/context/UserProvider'
 import './globals.css'
 import { Inter } from 'next/font/google'
