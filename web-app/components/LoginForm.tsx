@@ -18,8 +18,8 @@ export default function LoginForm() {
     if(email !== '' && password !== '') {
       const post = async () => {
         const u: User = {username: email, userPassword: password};
-        // const res = await fetch(`/api/login?api=${process.env.NEXT_PUBLIC_API_KEY}`, { method: "POST", body: JSON.stringify(u)});
-        const res = await fetch("http://51.138.90.181:81/Account/login", { method: "POST", body: JSON.stringify(u)});
+        const res = await fetch(`/api/login?api=${process.env.NEXT_PUBLIC_API_KEY}`, { method: "POST", body: JSON.stringify(u)});
+        // const res = await fetch("http://51.138.90.181:81/Account/login", { method: "POST", body: JSON.stringify(u)});
         return res.json();
       }
 
