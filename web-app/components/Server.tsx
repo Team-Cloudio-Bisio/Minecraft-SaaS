@@ -43,6 +43,7 @@ export default function Server() {
                     setServers(list)
 
                     setShouldUpdate(false);
+                    setPopup(false);
                 })
                 .catch((e) => console.log("fetch error\n" + e));
         }

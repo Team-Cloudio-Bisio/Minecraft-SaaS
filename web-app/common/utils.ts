@@ -1,4 +1,4 @@
-import { Server, ServerProperties, User } from "./types";
+import { Difficutly, Gamemode, Server, ServerProperties, User } from "./types";
 
 export function getServerPropertiesFromServer(server: Server): ServerProperties {
     return {
@@ -8,9 +8,9 @@ export function getServerPropertiesFromServer(server: Server): ServerProperties 
         status: true,
         version: "lts",
         curp: 0,
-        maxp: server.settings.maxPlayers,
-        gamemode: server.settings.gamemode,
-        difficulty: server.settings.difficulty,
+        maxp: server.settings.maxPlayers ? server.settings.maxPlayers : 20,
+        gamemode: server.settings.gamemode ? server.settings.gamemode : Gamemode.survival,
+        difficulty: server.settings.difficulty ? server.settings.difficulty : Difficutly.normal,
         whitelist: true ? server.whitelist.length > 0 : false,
         cracked: false,
         fly: false,
