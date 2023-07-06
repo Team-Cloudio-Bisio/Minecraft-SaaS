@@ -123,12 +123,12 @@ export default function EditPopup(serverUpdater: ServerUpdater) {
                             />
                         </div>
                         <div className="mb-2">
-                            Server IP:
-                            <input className="ml-2 border w-36"
+                            Server IP: {serverUpdater.serverInstance.ip}
+                            {/* <input className="ml-2 border w-36"
                                    name='ip'
                                    placeholder={serverUpdater.serverInstance.ip}
                                    onChange={(event) => onChangeIP(event.target.value)}
-                            />.mcsaas.com
+                            />.mcsaas.com */}
                         </div>
                         <div className="mb-2">{/* IMPORTANTE: CREARE LOGICA COERENTE */}
                             <label className="mr-2">Status:</label>

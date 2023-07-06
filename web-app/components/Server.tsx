@@ -6,9 +6,9 @@ import { useUserContext } from '@/context/UserProvider';
 import { getServerFromServerProperties, getServerPropertiesFromServer } from '@/common/utils';
 
 const initState: Array<ServerProperties>= [
-    { id: 1, name: 'Vanilla', ip: 'Vanilla', status: false, version: '1.20', curp: 0, maxp: 5, gamemode: 0,
+    { id: 1, name: 'Vanilla', ip: '20.45.125.6', status: false, version: '1.20', curp: 0, maxp: 5, gamemode: 0,
     difficulty: 2, whitelist: false, cracked: false, fly: false, resourcepack: ""},
-    { id: 2, name: 'Modded', ip: 'Modded', status: false, version: '1.20', curp: 0, maxp: 5, gamemode: 0,
+    { id: 2, name: 'Modded', ip: '20.45.125.33', status: false, version: '1.20', curp: 0, maxp: 5, gamemode: 0,
     difficulty: 2, whitelist: false, cracked: false, fly: false, resourcepack: ""},
   ];
 
