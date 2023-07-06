@@ -27,9 +27,9 @@ var maxIndex = Object.keys(initState).length
 export default function Server() {
     const { user, setUser } = useUserContext();
     const [servers, setServers] = useState(initState); //primo el: stato, secondo el: funzione per aggiornarlo
-    const [currentServer, setCurrentServer] = useState<ServerProperties>();
+    const [currentServer, setCurrentServer] = useState<ServerProperties>(initState[0]);
     const [activeServer, setActive] = useState(0);
-    const [popup, setPopup] = useState(true);
+    const [popup, setPopup] = useState(false);
     const [create, setCreate] = useState(false);
 
     useEffect(() => {
@@ -57,7 +57,7 @@ export default function Server() {
     function updateProps(props: ServerProperties) { //da passare al popup
         const server = getServerFromServerProperties(props, user)
 
-        if(create) {
+        if(create && process.env.NODE_ENV === "production") {
             fetch(`https://mcsaasserver.azurewebsites.net/api/CreateServer?code=${process.env.NEXT_PUBLIC_CREATE_KEY}`, { method: "POST", body: JSON.stringify(server)})
                 .then(res => res.json())
                 .then(res => {
@@ -177,8 +177,8 @@ export default function Server() {
                 <pre className="grid grid-cols-6 gap-20 mx-3 mt-3 px-3 py-2 bg-white text-slate-950 rounded-md shadow-md">
                     {'Name'} &#09;&#09;&#09;&#09;{'Status'} &#09;&#09;{'Version'}
                 </pre>
-                {popup && currentServer &&
-                    <EditPopup active={0} popupIsOpen={true} serverInstance={currentServer} setPopupIsOpen={setPopup} updateActiveBack={updateActiveServer} updateCallback={updateProps}/>
+                {popup &&
+                    <EditPopup active={0} popupIsOpen={popup} serverInstance={currentServer} setPopupIsOpen={setPopup} updateActiveBack={updateActiveServer} updateCallback={updateProps}/>
                 }
                 {servers.map(server => {
                         return <pre className="grid grid-cols-6 gap-20 mx-3 mt-3 px-3 py-2 bg-white rounded-md shadow-md"
