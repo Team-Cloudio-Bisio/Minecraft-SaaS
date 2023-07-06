@@ -1,21 +1,39 @@
 import { Difficutly, Gamemode, Server, ServerProperties, User } from "./types";
 
 export function getServerPropertiesFromServer(server: Server): ServerProperties {
-    return {
-        id: Math.floor(Math.random() * (100 - 0 + 1)),
-        name: server.serverName,
-        ip: server.ip,
-        status: true,
-        version: "lts",
-        curp: 0,
-        maxp: server.settings.maxPlayers ? server.settings.maxPlayers : 20,
-        gamemode: server.settings.gamemode ? server.settings.gamemode : Gamemode.survival,
-        difficulty: server.settings.difficulty ? server.settings.difficulty : Difficutly.normal,
-        whitelist: true ? server.whitelist.length > 0 : false,
-        cracked: false,
-        fly: false,
-        resourcepack: ""
-    }
+    if(server.settings === null) {
+        return {
+            id: Math.floor(Math.random() * (100 - 0 + 1)),
+            name: server.serverName,
+            ip: server.ip,
+            status: true,
+            version: "lts",
+            curp: 0,
+            maxp: 20,
+            gamemode: Gamemode.survival,
+            difficulty: Difficutly.normal,
+            whitelist: true ? server.whitelist.length > 0 : false,
+            cracked: false,
+            fly: false,
+            resourcepack: ""
+
+        }
+    } else
+        return {
+            id: Math.floor(Math.random() * (100 - 0 + 1)),
+            name: server.serverName,
+            ip: server.ip,
+            status: true,
+            version: "lts",
+            curp: 0,
+            maxp: server.settings.maxPlayers ? server.settings.maxPlayers : 20,
+            gamemode: server.settings.gamemode ? server.settings.gamemode : Gamemode.survival,
+            difficulty: server.settings.difficulty ? server.settings.difficulty : Difficutly.normal,
+            whitelist: true ? server.whitelist.length > 0 : false,
+            cracked: false,
+            fly: false,
+            resourcepack: ""
+        }
 }
 
 export function getServerFromServerProperties(props: ServerProperties, user: User): Server {
