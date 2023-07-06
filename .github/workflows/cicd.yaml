@@ -29,6 +29,7 @@ jobs:
             "LOGIN_KEY=${{ secrets.LOGIN_KEY}}"
             "REGISTER_KEY=${{ secrets.REGISTER_KEY}}"
             "CREATE_KEY=${{ secrets.CREATE_KEY}}"
+            "GET_KEY=${{ secrets.GET_KEY}}"
   deploy:
     name: Deploy WebApp
     needs: build
