@@ -31,6 +31,22 @@ export default function Server() {
     const [activeServer, setActive] = useState(0);
     const [popup, setPopup] = useState(false);
     const [create, setCreate] = useState(false);
+    const [shouldUpdate, setShouldUpdate] = useState(false);
+
+    useEffect(() => {
+        if(shouldUpdate) {
+            fetch(`https://mcsaasserver.azurewebsites.net/api/GetServers?code=${process.env.NEXT_PUBLIC_GET_KEY}&username=${user.username}`, { method: "GET" } )
+                .then(res => res.json())
+                .then((res: Array<Server>) => {
+                    const list: Array<ServerProperties> = [];
+                    res.map((server: Server) => list.push(getServerPropertiesFromServer(server)));
+                    setServers(list)
+
+                    setShouldUpdate(false);
+                })
+                .catch((e) => console.log("fetch error\n" + e));
+        }
+    }, [shouldUpdate]);
 
     useEffect(() => {
         if(process.env.NODE_ENV === "production") {
@@ -41,7 +57,7 @@ export default function Server() {
                     res.map((server: Server) => list.push(getServerPropertiesFromServer(server)));
                     setServers(list)
                 })
-                .catch(() => console.log("fetch error"))
+                .catch((e) => console.log("fetch error\n" + e));
         }
     }, []);
 
@@ -56,14 +72,12 @@ export default function Server() {
 
         if(create && process.env.NODE_ENV === "production") {
             fetch(`https://mcsaasserver.azurewebsites.net/api/CreateServer?code=${process.env.NEXT_PUBLIC_CREATE_KEY}`, { method: "POST", body: JSON.stringify(server)})
-                .then(res => res.json())
                 .then(res => {
-                    const props = getServerPropertiesFromServer(res);
-                    setServers(s => [...s, props]);
+                    console.log(res);
+                    setShouldUpdate(true);
+                    setCreate(false);
                 })
                 .catch((e) => alert("Server creation error\n" + e));
-
-            setCreate(false);
         } else {
             setServers(s => {
                 return s.map(server => {
@@ -75,7 +89,6 @@ export default function Server() {
             })
         }
 
-        setPopup(false)
     }
 
     // TURN ON TURN OFF
