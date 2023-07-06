@@ -58,14 +58,13 @@ export default function Server() {
         const server = getServerFromServerProperties(props, user)
 
         if(create) {
-            fetch(`/api/server?api=${process.env.NEXT_PUBLIC_API_KEY}`, { method: "POST", body: JSON.stringify(server)})
+            fetch(`https://mcsaasserver.azurewebsites.net/api/CreateServer?code=${process.env.NEXT_PUBLIC_CREATE_KEY}`, { method: "POST", body: JSON.stringify(server)})
                 .then(res => res.json())
                 .then(res => {
                     const props = getServerPropertiesFromServer(res);
                     setServers(s => [...s, props]);
-                    console.log("server created");
                 })
-                .catch(() => console.log("creation error"));
+                .catch((e) => alert("Server creation error\n" + e));
 
             setCreate(false);
         } else {
