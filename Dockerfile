@@ -26,6 +26,9 @@ RUN --mount=type=secret,id=CREATE_KEY \
 RUN echo -e "\n" >> .env.production.local
 RUN --mount=type=secret,id=GET_KEY \
 	cat /run/secrets/GET_KEY >> .env.production.local
+RUN echo -e "\n" >> .env.production.local
+RUN --mount=type=secret,id=DELETE_KEY \
+	cat /run/secrets/DELETE_KEY >> .env.production.local
 
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1

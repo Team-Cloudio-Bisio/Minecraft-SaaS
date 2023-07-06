@@ -149,15 +149,21 @@ export default function Server() {
 
     function removeServer(server: ServerProperties) {
         const s = getServerFromServerProperties(server, user);
-        fetch(`/api/server?api=${process.env.NEXT_PUBLIC_API_KEY}`, { method: "DELETE", body: JSON.stringify(s)})
-            .then(res => res.json())
-            .then(res => {
-                if(res.message === 'OK') 
-                    setServers(servers.filter((s) => s.name !== server.name))
-                else
-                    alert("Delete error...")
-            })
-            .catch(() => console.log("creation error"));
+        if(process.env.NODE_ENV === "production") {
+            fetch(`https://mcsaasserver.azurewebsites.net/api/DeleteServer?code=${process.env.NEXT_PUBLIC_DELETE_KEY}`, { method: "DELETE", body: JSON.stringify(s)})
+                .then(res => res.json())
+                .then(res => {
+                    if(res.serverName === s.serverName) {
+                        setServers(servers.filter((s) => s.name !== server.name))
+                        setShouldUpdate(true);
+                    } else
+                        alert("Delete error...")
+                })
+                .catch((e) => alert("Error deleting server\n" + e));
+
+        } else {
+            // rimuovi a mano
+        }
 
         // if (activeServer == server.id)
         //     alert("Action blocked. The server is running")
