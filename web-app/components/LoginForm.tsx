@@ -85,7 +85,7 @@ export default function LoginForm() {
             href="/forget"
             className="text-xs text-blue-600 hover:underline"
           >
-            Forgot Passwordaaa?
+            Forgot Password?
           </Link>
           <div className="mt-2">
             <button type='submit' onClick={onLoginButton} className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
@@ -130,7 +130,7 @@ export default function LoginForm() {
         </div>
   
         <p className="mt-4 text-sm text-center text-gray-700">
-          Don&apost have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link
             href="/register"
             className="font-medium text-blue-600 hover:underline"
