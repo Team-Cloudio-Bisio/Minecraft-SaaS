@@ -150,7 +150,7 @@ export default function Server() {
     function removeServer(server: ServerProperties) {
         const s = getServerFromServerProperties(server, user);
         if(process.env.NODE_ENV === "production") {
-            fetch(`https://mcsaasserver.azurewebsites.net/api/DeleteServer?code=${process.env.NEXT_PUBLIC_DELETE_KEY}`, { method: "DELETE", body: JSON.stringify(s)})
+            fetch(`https://mcsaasserver.azurewebsites.net/api/DeleteServer?code=${process.env.NEXT_PUBLIC_DELETE_KEY}&serverName=${s.serverName}`, { method: "DELETE" })
                 .then(res => res.json())
                 .then(res => {
                     if(res.serverName === s.serverName) {
