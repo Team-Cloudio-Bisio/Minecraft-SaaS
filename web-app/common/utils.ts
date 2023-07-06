@@ -12,11 +12,10 @@ export function getServerPropertiesFromServer(server: Server): ServerProperties 
             maxp: 20,
             gamemode: Gamemode.survival,
             difficulty: Difficutly.normal,
-            whitelist: true ? server.whitelist.length > 0 : false,
+            whitelist: false,
             cracked: false,
             fly: false,
             resourcepack: ""
-
         }
     } else
         return {
