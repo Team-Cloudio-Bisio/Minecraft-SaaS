@@ -2,11 +2,11 @@ import { User } from "@/common/types";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-    const { searchParams } = new URL(request.url);
+    // const { searchParams } = new URL(request.url);
 
-    if(searchParams.get('api') !== process.env.NEXT_PUBLIC_API_KEY) {
-        return NextResponse.json({message: "You are not authorized"})
-    }
+    // if(searchParams.get('api') !== process.env.NEXT_PUBLIC_API_KEY) {
+    //     return NextResponse.json({message: "You are not authorized"})
+    // }
 
     const user: User = await request.json();
     // const response = await fetch('http://accountmicroservice:81/Account/login', {
