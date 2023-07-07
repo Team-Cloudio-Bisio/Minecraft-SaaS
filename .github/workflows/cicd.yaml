@@ -26,6 +26,7 @@ jobs:
           push: true
           tags: ${{ secrets.ACR_USERNAME }}/${{ env.IMAGE_NAME }}:latest
           secrets: |
+            "API_KEY=${{ secrets.API_KEY}}"
             "LOGIN_KEY=${{ secrets.LOGIN_KEY}}"
             "REGISTER_KEY=${{ secrets.REGISTER_KEY}}"
             "CREATE_KEY=${{ secrets.CREATE_KEY}}"
