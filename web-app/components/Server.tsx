@@ -26,7 +26,6 @@ export type ServerUpdater = {
     active: number //id del server attivo
     updateActiveBack: (server: ServerProperties) => void //callback per aggiornare l'id del server attivo (implementata da updateActive)
     popupIsOpen: boolean
-    creation: boolean
     setPopupIsOpen: (value: boolean) => void
 }
   
@@ -104,14 +103,14 @@ export default function Server() {
             //     })
             //     .catch((e) => alert("Server creation error\n" + e));
         } else {
-            setServers(s => {
-                return s.map(server => {
-                    if (server.id === props.id) {
-                        return {...server,...props}
-                    }
-                    return server
-                })
-            })
+            // setServers(s => {
+            //     return s.map(server => {
+            //         if (server.id === props.id) {
+            //             return {...server,...props}
+            //         }
+            //         return server
+            //     })
+            // })
         }
     }
 
@@ -184,10 +183,7 @@ export default function Server() {
                         alert("Delete error...")
                 })
                 .catch((e) => alert("Error deleting server\n" + e));
-
-        } else {
-            // rimuovi a mano
-        }
+        } 
 
         // if (activeServer == server.id)
         //     alert("Action blocked. The server is running")
@@ -226,7 +222,7 @@ export default function Server() {
                     </p>
                 </pre>
                 {popup &&
-                    <EditPopup creation={create} active={0} popupIsOpen={popup} serverInstance={currentServer} setPopupIsOpen={setPopup} updateActiveBack={updateActiveServer} updateCallback={updateProps}/>
+                    <EditPopup active={0} popupIsOpen={popup} serverInstance={currentServer} setPopupIsOpen={setPopup} updateActiveBack={updateActiveServer} updateCallback={updateProps}/>
                 }
                 {servers.map(server => {
                         // return <pre className="grid grid-cols-6 gap-20 mx-3 mt-3 px-3 py-2 bg-white rounded-md shadow-md" key={server.id} onClick={() => console.log(server.name)}>
