@@ -166,6 +166,7 @@ export default function Server() {
                         alert("Delete error...")
                 })
                 .catch((e) => alert("Error deleting server\n" + e));
+            }
 
         // if (activeServer == server.id)
         //     alert("Action blocked. The server is running")
