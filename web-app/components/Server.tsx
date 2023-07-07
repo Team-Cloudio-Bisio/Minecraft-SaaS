@@ -80,16 +80,13 @@ export default function Server() {
         const server = getServerFromServerProperties(props, user)
 
         if(create && process.env.NODE_ENV === "production") {
-            fetch('api/server', {method: "POST", body: JSON.stringify(server)})
-                .then(res => res.json())
+            fetch(`https://mcsaasserver.azurewebsites.net/api/CreateServer?code=${process.env.NEXT_PUBLIC_CREATE_KEY}`, { method: "POST", body: JSON.stringify(server)})
                 .then(res => {
-                    if(res.message === "OK") {
-                        setShouldUpdate(true);
-                        setCreate(false);
-                    } else {
-                        alert("Server creation error");
-                    }
+                    console.log(res);
+                    setShouldUpdate(true);
+                    setCreate(false);
                 })
+                .catch((e) => alert("Server creation error\n" + e));
         } else {
             // setServers(s => {
             //     return s.map(server => {
@@ -159,19 +156,16 @@ export default function Server() {
     function removeServer(server: ServerProperties) {
         const s = getServerFromServerProperties(server, user);
         if(process.env.NODE_ENV === "production") {
-            // fetch(`https://mcsaasserver.azurewebsites.net/api/DeleteServer?code=${process.env.NEXT_PUBLIC_DELETE_KEY}&serverName=${s.serverName}`, { method: "DELETE" })
-            fetch(`/api/server&serverName=${s.serverName}`, { method: "DELETE" })
+            fetch(`https://mcsaasserver.azurewebsites.net/api/DeleteServer?code=${process.env.NEXT_PUBLIC_DELETE_KEY}&serverName=${s.serverName}`, { method: "DELETE" })
                 .then(res => res.json())
                 .then(res => {
-                    // if(res.serverName === s.serverName) {
-                    if(res.message === "OK") {
+                    if(res.serverName === s.serverName) {
                         setServers(servers.filter((s) => s.name !== server.name))
                         setShouldUpdate(true);
                     } else
                         alert("Delete error...")
                 })
                 .catch((e) => alert("Error deleting server\n" + e));
-        } 
 
         // if (activeServer == server.id)
         //     alert("Action blocked. The server is running")
