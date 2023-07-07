@@ -20,12 +20,12 @@ export default function RegisterForm() {
       if(password === repass) {
         const post = async () => {
           const user: User = {username: email, userPassword: password};
-          const res = await fetch(`https://mcsaasdb.azurewebsites.net/api/Register?code=${process.env.NEXT_PUBLIC_REGISTER_KEY}`, { method: "POST", body: JSON.stringify(user)});
+          const res = await fetch(`/api/register`, { method: "POST", body: JSON.stringify(user)});
           return res.json();
         }
   
         post().then((data) => {
-          if(data.message === "OK") {
+          if(data.message === "Register successfully") {
             setUser({ username: email, userPassword: password });
             router.push('/serverlist');
           } else {

@@ -3,21 +3,42 @@ import { getServerPropertiesFromServer } from "@/common/utils";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
+    // const { searchParams } = new URL(request.url);
+
+    // if(searchParams.get('api') !== process.env.NEXT_PUBLIC_API_KEY) {
+    //     return NextResponse.json({message: "You are not authorized"})
+    // }
+
+    const server: Server = await request.json();
+
+    fetch(`https://mcsaasserver.azurewebsites.net/api/CreateServer?code=${process.env.NEXT_PUBLIC_CREATE_KEY}`, { method: "POST", body: JSON.stringify(server)})
+        .then(res => {
+            console.log(res);
+            NextResponse.json({ message: "OK" });
+        })
+        .catch((e) => alert("Server creation error\n" + e));
+
+    return NextResponse.json({ message: "NO" });
+}
+
+export async function DELETE(request: NextRequest) {
     const { searchParams } = new URL(request.url);
 
-    if(searchParams.get('api') !== process.env.NEXT_PUBLIC_API_KEY) {
-        return NextResponse.json({message: "You are not authorized"})
-    }
+    // if(searchParams.get('api') !== process.env.NEXT_PUBLIC_API_KEY) {
+    //     return NextResponse.json({message: "You are not authorized"})
+    // }
 
-    const user: User = await request.json();
-    // const response = await fetch(`http://dbmicroservice:80/Server/byUser?username=${user.username}`, {
-    const response = await fetch(`http://localhost:4000/Server/byUser?username=${user.username}`, {
-        method: "GET",
-    })
+    const server = searchParams.get('serverName');
 
-    const res: Array<Server> = await response.json()
-    const list: Array<ServerProperties> = [];
-    res.map((server: Server) => list.push(getServerPropertiesFromServer(server)));
+    fetch(`https://mcsaasserver.azurewebsites.net/api/DeleteServer?code=${process.env.NEXT_PUBLIC_DELETE_KEY}&serverName=${server}`, { method: "DELETE" })
+        .then(res => res.json())
+        .then(res => {
+            if(res.serverName === server) {
+                NextResponse.json({ message: "OK" });
+            } else
+                NextResponse.json({ message: "NO" });
+        })
+        .catch((e) => alert("Error deleting server\n" + e));
 
-    return NextResponse.json(list);
+    return NextResponse.json({ message: "NO" });
 }

@@ -4,13 +4,21 @@ import EditPopup from '@/components/EditPopup'
 import { Server, ServerProperties, User } from '@/common/types';
 import { useUserContext } from '@/context/UserProvider';
 import { getServerFromServerProperties, getServerPropertiesFromServer } from '@/common/utils';
+import { list } from 'postcss';
+
+// const initState: Array<ServerProperties>= [
+//     { id: 1, name: 'Vanilla', ip: '20.45.125.6', status: false, version: '1.20', curp: 0, maxp: 5, gamemode: 0,
+//     difficulty: 2, whitelist: false, cracked: false, fly: false, resourcepack: ""},
+//     { id: 2, name: 'Modded', ip: '20.45.125.33', status: false, version: '1.20', curp: 0, maxp: 5, gamemode: 0,
+//     difficulty: 2, whitelist: false, cracked: false, fly: false, resourcepack: ""},
+//   ];
 
 const initState: Array<ServerProperties>= [
-    { id: 1, name: 'Vanilla', ip: '20.45.125.6', status: false, version: '1.20', curp: 0, maxp: 5, gamemode: 0,
-    difficulty: 2, whitelist: false, cracked: false, fly: false, resourcepack: ""},
-    { id: 2, name: 'Modded', ip: '20.45.125.33', status: false, version: '1.20', curp: 0, maxp: 5, gamemode: 0,
-    difficulty: 2, whitelist: false, cracked: false, fly: false, resourcepack: ""},
-  ];
+    { id: 1, name: 'a', ip: '', status: false, version: '', curp: 0, maxp: 5, gamemode: 0,
+    difficulty: 1, whitelist: false, cracked: false, fly: false, resourcepack: ""},
+];
+
+const empty: ServerProperties = { id: 1, name: '', ip: '', status: false, version: '', curp: 0, maxp: 5, gamemode: 0, difficulty: 1, whitelist: false, cracked: false, fly: false, resourcepack: ""}
 
 export type ServerUpdater = {
     serverInstance: ServerProperties
@@ -18,6 +26,7 @@ export type ServerUpdater = {
     active: number //id del server attivo
     updateActiveBack: (server: ServerProperties) => void //callback per aggiornare l'id del server attivo (implementata da updateActive)
     popupIsOpen: boolean
+    creation: boolean
     setPopupIsOpen: (value: boolean) => void
 }
   
@@ -33,36 +42,42 @@ export default function Server() {
     const [create, setCreate] = useState(false);
     const [shouldUpdate, setShouldUpdate] = useState(false);
 
+    useEffect(() => setCreate(false), [popup]);
+
     useEffect(() => {
         if(shouldUpdate) {
-            fetch(`https://mcsaasserver.azurewebsites.net/api/GetServers?code=${process.env.NEXT_PUBLIC_GET_KEY}&username=${user.username}`, { method: "GET" } )
+            // fetch(`https://mcsaasserver.azurewebsites.net/api/GetServers?code=${process.env.NEXT_PUBLIC_GET_KEY}&username=${user.username}`, { method: "GET" } )
+            //     .then(res => res.json())
+            //     .then((res: Array<Server>) => {
+            //         const list: Array<ServerProperties> = [];
+            //         res.map((server: Server) => list.push(getServerPropertiesFromServer(server)));
+            //         setServers(list)
+            //         setShouldUpdate(false);
+            //         setPopup(false);
+            //     })
+            //     .catch((e) => console.log("fetch error\n" + e));
+            fetch('api/server/byUser', {method: "POST", body: JSON.stringify(user)})
                 .then(res => res.json())
-                .then((res: Array<Server>) => {
-                    const list: Array<ServerProperties> = [];
-                    res.map((server: Server) => list.push(getServerPropertiesFromServer(server)));
-                    setServers(list)
-
+                .then((res: Array<ServerProperties>) => {
+                    setServers(res);
                     setShouldUpdate(false);
                     setPopup(false);
                 })
                 .catch((e) => console.log("fetch error\n" + e));
         }
-    }, [shouldUpdate]);
+    }, [shouldUpdate, user]);
 
     useEffect(() => {
         if(process.env.NODE_ENV === "production") {
-            fetch(`https://mcsaasserver.azurewebsites.net/api/GetServers?code=${process.env.NEXT_PUBLIC_GET_KEY}&username=${user.username}`, { method: "GET" } )
+            fetch('api/server/byUser', {method: "POST", body: JSON.stringify(user)})
                 .then(res => res.json())
-                .then((res: Array<Server>) => {
-                    const list: Array<ServerProperties> = [];
-                    res.map((server: Server) => list.push(getServerPropertiesFromServer(server)));
-                    setServers(list)
-                })
+                .then((res: Array<ServerProperties>) => setServers(res))
                 .catch((e) => console.log("fetch error\n" + e));
         }
-    }, []);
+    });
 
     function openPopupWith(server: ServerProperties) {
+        setCreate(false);
         setCurrentServer(server);
         setPopup(true);
     }
@@ -72,13 +87,22 @@ export default function Server() {
         const server = getServerFromServerProperties(props, user)
 
         if(create && process.env.NODE_ENV === "production") {
-            fetch(`https://mcsaasserver.azurewebsites.net/api/CreateServer?code=${process.env.NEXT_PUBLIC_CREATE_KEY}`, { method: "POST", body: JSON.stringify(server)})
+            fetch('api/server', {method: "POST", body: JSON.stringify(server)})
+                .then(res => res.json())
                 .then(res => {
-                    console.log(res);
-                    setShouldUpdate(true);
-                    setCreate(false);
+                    if(res.message === "OK") {
+                        setShouldUpdate(true);
+                        setCreate(false);
+                    } else {
+                        alert("Server creation error");
+                    }
                 })
-                .catch((e) => alert("Server creation error\n" + e));
+
+            // fetch(`https://mcsaasserver.azurewebsites.net/api/CreateServer?code=${process.env.NEXT_PUBLIC_CREATE_KEY}`, { method: "POST", body: JSON.stringify(server)})
+            //     .then(res => {
+            //         console.log(res);
+            //     })
+            //     .catch((e) => alert("Server creation error\n" + e));
         } else {
             setServers(s => {
                 return s.map(server => {
@@ -89,12 +113,10 @@ export default function Server() {
                 })
             })
         }
-
     }
 
     // TURN ON TURN OFF
     function updateActiveServer(props: ServerProperties) {
-        console.log(props.name)
         if(!props.status) {
             fetch(`/api/server/${props.name}/start?api=${process.env.NEXT_PUBLIC_API_KEY}`, { method: "GET", })
                 .then(res => res.json())
@@ -150,10 +172,12 @@ export default function Server() {
     function removeServer(server: ServerProperties) {
         const s = getServerFromServerProperties(server, user);
         if(process.env.NODE_ENV === "production") {
-            fetch(`https://mcsaasserver.azurewebsites.net/api/DeleteServer?code=${process.env.NEXT_PUBLIC_DELETE_KEY}&serverName=${s.serverName}`, { method: "DELETE" })
+            // fetch(`https://mcsaasserver.azurewebsites.net/api/DeleteServer?code=${process.env.NEXT_PUBLIC_DELETE_KEY}&serverName=${s.serverName}`, { method: "DELETE" })
+            fetch(`/api/server&serverName=${s.serverName}`, { method: "DELETE" })
                 .then(res => res.json())
                 .then(res => {
-                    if(res.serverName === s.serverName) {
+                    // if(res.serverName === s.serverName) {
+                    if(res.message === "OK") {
                         setServers(servers.filter((s) => s.name !== server.name))
                         setShouldUpdate(true);
                     } else
@@ -176,6 +200,8 @@ export default function Server() {
     function addServer() {
         setPopup(true);
         setCreate(true);
+        setCurrentServer(empty);
+        console.log("add: " + create)
         // serverCount++
         // maxIndex++
         // const newServer = { id: maxIndex, name: "server"+maxIndex, ip: "server"+maxIndex, status: false, version: '1.20', curp: 0, maxp: 5, gamemode: 0,
@@ -191,32 +217,37 @@ export default function Server() {
                 backgroundImage: `url('/assets/bg3.jpg')`,
                 height: '700px'
                 }}>
-                <pre className="grid grid-cols-6 gap-20 mx-3 mt-3 px-3 py-2 bg-white text-slate-950 rounded-md shadow-md">
-                    {'Name'} &#09;&#09;&#09;&#09;{'Status'} &#09;&#09;{'Version'}
+                <pre className="flex justify-between mx-3 mt-3 px-3 py-2 bg-white text-slate-950 rounded-md shadow-md">
+                    <p className='basis-[55%]'>
+                        Name
+                    </p>
+                    <p className='basis-[45%]'>
+                        Status
+                    </p>
                 </pre>
                 {popup &&
-                    <EditPopup active={0} popupIsOpen={popup} serverInstance={currentServer} setPopupIsOpen={setPopup} updateActiveBack={updateActiveServer} updateCallback={updateProps}/>
+                    <EditPopup creation={create} active={0} popupIsOpen={popup} serverInstance={currentServer} setPopupIsOpen={setPopup} updateActiveBack={updateActiveServer} updateCallback={updateProps}/>
                 }
                 {servers.map(server => {
-                        return <pre className="grid grid-cols-6 gap-20 mx-3 mt-3 px-3 py-2 bg-white rounded-md shadow-md"
-                                    key={server.id}>
-                                        <span className="text-slate-950">
+                        // return <pre className="grid grid-cols-6 gap-20 mx-3 mt-3 px-3 py-2 bg-white rounded-md shadow-md" key={server.id} onClick={() => console.log(server.name)}>
+                        return <pre className="flex flex-row items-center mx-3 mt-3 px-3 py-2 bg-white rounded-md shadow-md" key={server.id} onClick={() => console.log(server.name)}>
+                                        <span className="basis-[55%] truncate text-slate-950">
                                             {server.name}
                                         </span>
                                             {server.status ?
-                                    <span className=""
+                                    <span className="basis-[15%]"
                                           style={{ color: 'green' }}>
-                                        {'Online'}
+                                        {'On'}
                                     </span>
                                     :
-                                    <span className=""
+                                    <span className="basis-[15%]"
                                           style={{ color: 'red' }}>
-                                        {'Offline'}
+                                        {'Off'}
                                     </span>}
-                                    <span className="text-slate-950">
+                                    {/* <span className="text-slate-950">
                                         {server.version}
-                                    </span>
-                                    <span className="">
+                                    </span> */}
+                                    <span className="basis-[30%]">
                                         {/* <EditPopup popupIsOpen={popup} setPopupIsOpen={setPopup} serverInstance={server} updateCallback={updateProps} active={activeServer} updateActiveBack={updateActiveServer}/> */}
                                         <button
                                         className= "pl-1 py-1 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-10"
@@ -242,7 +273,6 @@ export default function Server() {
                                                 viewBox="100 115 280 280">
                                                 <path d="M256 0c70.68 0 134.7 28.66 181.02 74.98C483.34 121.3 512 185.32 512 256s-28.66 134.69-74.98 181.01C390.7 483.33 326.68 511.99 256 511.99s-134.7-28.66-181.02-74.98C28.66 390.69 0 326.68 0 256c0-70.68 28.66-134.7 74.98-181.02C121.3 28.66 185.32 0 256 0zm-19.16 136.45c0-10.57 8.59-19.16 19.16-19.16s19.16 8.59 19.16 19.16V199c0 10.57-8.59 19.16-19.16 19.16s-19.16-8.59-19.16-19.16v-62.55zm72.94 52.45c-8.17-6.65-9.42-18.69-2.78-26.87 6.65-8.17 18.7-9.42 26.87-2.77 14.26 11.56 25.88 26.2 33.8 42.84 7.67 16.11 11.97 34.14 11.97 53.12 0 34.14-13.85 65.06-36.21 87.42l-1.17 1.08c-22.31 21.74-52.77 35.13-86.26 35.13-34.06 0-64.99-13.86-87.38-36.26-22.41-22.31-36.26-53.23-36.26-87.37 0-18.89 4.29-36.86 11.94-52.97 7.93-16.69 19.53-31.36 33.71-42.9 8.17-6.65 20.22-5.4 26.86 2.77 6.65 8.18 5.4 20.22-2.77 26.87-9.76 7.95-17.76 18.06-23.22 29.57-5.25 11.04-8.2 23.49-8.2 36.66 0 23.56 9.57 44.89 24.99 60.32 15.38 15.47 36.72 24.99 60.33 24.99 23.16 0 44.13-9.18 59.44-24.05l.89-.94c15.42-15.43 24.99-36.76 24.99-60.32 0-13.15-2.96-25.59-8.23-36.66a85.591 85.591 0 0 0-23.31-29.66zm102.97-89.65C372.64 59.15 317.21 34.33 256 34.33c-61.21 0-116.64 24.82-156.75 64.92-40.1 40.11-64.92 95.54-64.92 156.75 0 61.21 24.82 116.63 64.92 156.74 40.11 40.1 95.54 64.92 156.75 64.92 61.21 0 116.64-24.82 156.75-64.92 40.1-40.11 64.92-95.53 64.92-156.74 0-61.21-24.82-116.64-64.92-156.75z"/>
                                             </svg>
-
                                         </button>
                                     </span>
                                 </pre>
