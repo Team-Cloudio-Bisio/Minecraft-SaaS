@@ -9,36 +9,21 @@ export async function POST(request: NextRequest) {
     //     return NextResponse.json({message: "You are not authorized"})
     // }
 
-    const server: Server = await request.json();
+    const user: User = await request.json();
 
-    fetch(`https://mcsaasserver.azurewebsites.net/api/CreateServer?code=${process.env.NEXT_PUBLIC_CREATE_KEY}`, { method: "POST", body: JSON.stringify(server)})
-        .then(res => {
-            console.log(res);
-            NextResponse.json({ message: "OK" });
+    fetch(`https://mcsaasserver.azurewebsites.net/api/GetServers?code=${process.env.NEXT_PUBLIC_GET_KEY}&username=${user.username}`, { method: "GET" } )
+        .then(res => res.json())
+        .then((res: Array<Server>) => {
+            const list: Array<ServerProperties> = [];
+            res.map((server: Server) => list.push(getServerPropertiesFromServer(server)));
+            
+            return NextResponse.json(list)
         })
-        .catch((e) => alert("Server creation error\n" + e));
+        .catch((e) => console.log("fetch error\n" + e));
 
-    return NextResponse.json({ message: "NO" });
+    return NextResponse.json([]);
 }
 
 export async function DELETE(request: NextRequest) {
-    const { searchParams } = new URL(request.url);
 
-    // if(searchParams.get('api') !== process.env.NEXT_PUBLIC_API_KEY) {
-    //     return NextResponse.json({message: "You are not authorized"})
-    // }
-
-    const server = searchParams.get('serverName');
-
-    fetch(`https://mcsaasserver.azurewebsites.net/api/DeleteServer?code=${process.env.NEXT_PUBLIC_DELETE_KEY}&serverName=${server}`, { method: "DELETE" })
-        .then(res => res.json())
-        .then(res => {
-            if(res.serverName === server) {
-                NextResponse.json({ message: "OK" });
-            } else
-                NextResponse.json({ message: "NO" });
-        })
-        .catch((e) => alert("Error deleting server\n" + e));
-
-    return NextResponse.json({ message: "NO" });
 }

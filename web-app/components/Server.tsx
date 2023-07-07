@@ -41,10 +41,8 @@ export default function Server() {
     const [create, setCreate] = useState(false);
     const [shouldUpdate, setShouldUpdate] = useState(false);
 
-    useEffect(() => setCreate(false), [popup]);
-
     useEffect(() => {
-        if(shouldUpdate) {
+        if(shouldUpdate && process.env.NODE_ENV === "production") {
             fetch(`https://mcsaasserver.azurewebsites.net/api/GetServers?code=${process.env.NEXT_PUBLIC_GET_KEY}&username=${user.username}`, { method: "GET" } )
                 .then(res => res.json())
                 .then((res: Array<Server>) => {
@@ -55,23 +53,18 @@ export default function Server() {
                     setPopup(false);
                 })
                 .catch((e) => console.log("fetch error\n" + e));
-
-            // fetch('api/server/byUser', {method: "POST", body: JSON.stringify(user)})
-            //     .then(res => res.json())
-            //     .then((res: Array<ServerProperties>) => {
-            //         setServers(res);
-            //         setShouldUpdate(false);
-            //         setPopup(false);
-            //     })
-            //     .catch((e) => console.log("fetch error\n" + e));
         }
     }, [shouldUpdate, user]);
 
     useEffect(() => {
         if(process.env.NODE_ENV === "production") {
-            fetch('api/server/byUser', {method: "POST", body: JSON.stringify(user)})
+            fetch(`https://mcsaasserver.azurewebsites.net/api/GetServers?code=${process.env.NEXT_PUBLIC_GET_KEY}&username=${user.username}`, { method: "GET" } )
                 .then(res => res.json())
-                .then((res: Array<ServerProperties>) => setServers(res))
+                .then((res: Array<Server>) => {
+                    const list: Array<ServerProperties> = [];
+                    res.map((server: Server) => list.push(getServerPropertiesFromServer(server)));
+                    setServers(list)
+                })
                 .catch((e) => console.log("fetch error\n" + e));
         }
     });
@@ -97,12 +90,6 @@ export default function Server() {
                         alert("Server creation error");
                     }
                 })
-
-            // fetch(`https://mcsaasserver.azurewebsites.net/api/CreateServer?code=${process.env.NEXT_PUBLIC_CREATE_KEY}`, { method: "POST", body: JSON.stringify(server)})
-            //     .then(res => {
-            //         console.log(res);
-            //     })
-            //     .catch((e) => alert("Server creation error\n" + e));
         } else {
             // setServers(s => {
             //     return s.map(server => {
