@@ -45,24 +45,25 @@ export default function Server() {
 
     useEffect(() => {
         if(shouldUpdate) {
-            // fetch(`https://mcsaasserver.azurewebsites.net/api/GetServers?code=${process.env.NEXT_PUBLIC_GET_KEY}&username=${user.username}`, { method: "GET" } )
-            //     .then(res => res.json())
-            //     .then((res: Array<Server>) => {
-            //         const list: Array<ServerProperties> = [];
-            //         res.map((server: Server) => list.push(getServerPropertiesFromServer(server)));
-            //         setServers(list)
-            //         setShouldUpdate(false);
-            //         setPopup(false);
-            //     })
-            //     .catch((e) => console.log("fetch error\n" + e));
-            fetch('api/server/byUser', {method: "POST", body: JSON.stringify(user)})
+            fetch(`https://mcsaasserver.azurewebsites.net/api/GetServers?code=${process.env.NEXT_PUBLIC_GET_KEY}&username=${user.username}`, { method: "GET" } )
                 .then(res => res.json())
-                .then((res: Array<ServerProperties>) => {
-                    setServers(res);
+                .then((res: Array<Server>) => {
+                    const list: Array<ServerProperties> = [];
+                    res.map((server: Server) => list.push(getServerPropertiesFromServer(server)));
+                    setServers(list)
                     setShouldUpdate(false);
                     setPopup(false);
                 })
                 .catch((e) => console.log("fetch error\n" + e));
+
+            // fetch('api/server/byUser', {method: "POST", body: JSON.stringify(user)})
+            //     .then(res => res.json())
+            //     .then((res: Array<ServerProperties>) => {
+            //         setServers(res);
+            //         setShouldUpdate(false);
+            //         setPopup(false);
+            //     })
+            //     .catch((e) => console.log("fetch error\n" + e));
         }
     }, [shouldUpdate, user]);
 
