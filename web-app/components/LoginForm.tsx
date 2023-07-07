@@ -23,7 +23,7 @@ export default function LoginForm() {
       if(process.env.NODE_ENV === "production") {
         const post = async () => {
           const u: User = {username: email, userPassword: password};
-          const res = await fetch(`/api/login?api=${process.env.NEXT_PUBLIC_API_KEY}`, { method: "POST", body: JSON.stringify(u)});
+          const res = await fetch(`/api/login`, { method: "POST", body: JSON.stringify(u)});
           // const res = await fetch(`https://mcsaasdb.azurewebsites.net/api/Login?code=${process.env.NEXT_PUBLIC_LOGIN_KEY}`, {method: "POST", body: JSON.stringify(u)});
           return res.json();
         }
