@@ -67,7 +67,7 @@ export default function Server() {
                 })
                 .catch((e) => console.log("fetch error\n" + e));
         }
-    });
+    }, []);
 
     function openPopupWith(server: ServerProperties) {
         setCreate(false);
