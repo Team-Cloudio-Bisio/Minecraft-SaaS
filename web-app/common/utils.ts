@@ -28,7 +28,7 @@ export function getServerPropertiesFromServer(server: Server): ServerProperties 
             maxp: server.settings.maxPlayers ? server.settings.maxPlayers : 20,
             gamemode: server.settings.gamemode ? server.settings.gamemode : Gamemode.survival,
             difficulty: server.settings.difficulty ? server.settings.difficulty : Difficutly.normal,
-            whitelist: true ? server.whitelist.length > 0 : false,
+            whitelist: server.whitelist !== null ? true : false,
             cracked: false,
             fly: false,
             resourcepack: ""
