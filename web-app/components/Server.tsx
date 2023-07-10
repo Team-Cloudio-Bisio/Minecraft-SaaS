@@ -62,8 +62,8 @@ export default function Server() {
                 .then(res => res.json())
                 .then((res: Array<Server>) => {
                     const list: Array<ServerProperties> = [];
-                    console.log(list);
                     res.map((server: Server) => list.push(getServerPropertiesFromServer(server)));
+                    console.log(list);
                     setServers(list)
                     setShouldUpdate(true);
                 })
